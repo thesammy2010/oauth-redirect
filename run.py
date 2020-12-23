@@ -1,5 +1,6 @@
 import os
 import json
+import datetime
 import flask
 import requests
 
@@ -12,18 +13,22 @@ api = Api(app)
 class AuthToken(Resource):
 
     def get(self):
-        embed = {"title": "Received redirect", "description": json.dumps(flask.request.args)}
-        data = {"username": "OAuth Redirect Response", "content": flask.request.args.get("appid"), "embeds": [embed]}
+        embed = {"title": f"App ID: {flask.request.args.get('appid')}", "description": json.dumps(flask.request.args)}
+        data = {
+            "username": "OAuth Redirect Response",
+            "content": f"Request Time {datetime.datetime.now().isoformat()}",
+            "embeds": [embed]
+        }
         r = requests.post(
             url=os.getenv("webhook_url"), data=json.dumps(data, indent=4), headers={"Content-Type": "application/json"}
         )
 
-        if r.status_code == 200:
+        if r.ok:
             return flask.make_response(flask.jsonify({"Result": "Success! Result has been sent to Discord"}), 200)
         else:
             return flask.make_response(flask.jsonify(
                     {"Result": "Failure! Result has failed to be sent to Discord. Check the logs"}
-                ), 400
+                ), 500
             )
 
 
