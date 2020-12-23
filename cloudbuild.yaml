@@ -1,0 +1,13 @@
+steps:
+  ## Deploy container image to Cloud Run
+  - id: "Deploy on Cloud Run"
+    name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: /bin/bash
+    args:
+      - -c
+      - |
+        gcloud run deploy anime-ml \
+        --image gcr.io/$PROJECT_ID/oauth-redirect:$COMMIT_SHA \
+        --region europe-west1 \
+        --platform managed \
+        --allow-unauthenticated
