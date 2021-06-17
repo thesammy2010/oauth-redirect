@@ -6,7 +6,7 @@ steps:
     args:
       - -c
       - |
-        gcloud run deploy anime-ml \
+        gcloud run deploy oauth-redirects \
         --image gcr.io/$PROJECT_ID/oauth-redirect:$COMMIT_SHA \
         --region europe-west1 \
         --platform managed \
